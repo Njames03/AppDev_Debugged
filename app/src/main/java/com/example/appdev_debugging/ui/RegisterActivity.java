@@ -69,7 +69,13 @@ public class RegisterActivity extends AppCompatActivity{
     //       Read the failing test's name and message. Which test fails, and what does it tell you?
     //    c) Test your guess quickly in an online regex tester or a tiny JUnit test before fixing.
     //    d) Fix it, re-run the tests until they pass, and explain what part of the rule was wrong.
-    //
+    //  Answers:
+    //    a -  Email is decided to be valid in Line 41 (Validator.validateEmail(email)), which delegates email format validation to Validator.validateEmail(...) in the Validator class.
+    //    b -  It says that valid email addresses ending in .ph / .edu.ph / .gov.ph are rejected with "Enter a valid email address" instead of passing validation.
+    //    c -  Testing against the regex shows "juan@school.com" matches because .com has 3 letters,
+    //         whereas "juan@school.ph" and "juan@up.edu.ph" fail because the final domain segment (.ph) only has 2 letters.
+    //    d -  The broken part of the rule is \\.[A-Za-z]{3,}$ on line 9 of Validator.java, which requires at least 3 letters at the end of the domain and rejects 2-letter country-code TLDs like .ph;
+    //         changing {3,} to {2,} and re-running the tests fixes it so .ph, .edu.ph, and .gov.ph pass.
     // TODO(DEBUG #4): Weak passwords are being accepted.
     //  The helper text promises "At least 8 characters, with letters and numbers".
     //  Steps to reproduce:

@@ -103,6 +103,11 @@ public class LoginActivity extends AppCompatActivity{
     //       "Step Into" (F7) to follow the password all the way to where it is checked.
     //       Watch the value of the password variable at each step in the Variables panel.
     //    c) Identify the exact line that breaks it, fix it, and explain WHY it broke.
+    //  Answers:
+    //  A - only lowercase passwords worked while uppercase and demo passwords failed
+    //  B - Variables shows password keeps original case until line 29 lowercases it with .toLowerCase(Locale.ROOT).
+    //  C - Line 29 in AuthManager.java broke login by automatically lowercasing password before
+    //      PasswordHasher.verify while register hashed the raw password.
     //
     // TODO(DEBUG #2): Users with capital letters in their email can't log in after registering.
     //  Steps to reproduce (fix DEBUG #1 first so logins can succeed at all):
@@ -118,6 +123,16 @@ public class LoginActivity extends AppCompatActivity{
     //    c) Hint for investigation only: a HashMap compares keys with equals(), and "A".equals("a") is false.
     //    d) Fix it so email matching is case-insensitive everywhere, and add a unit test in
     //       AuthManagerTest that would have caught this bug.
+    //  Answers:
+    //    A - Logging in with all-lowercase email after registering succeeds and registering the same email the second time fails
+    //        while logging in with a capital-letter email fails the first time but succeeds the second time instead of reporting
+    //        that the account already exists.
+    //    b) Saved: Line 55 (User user = new User(fullName.trim(), email.trim(), hash, salt);) and line 57 (if (!repository.add(user))),
+    //              where the email is saved with its original casing (e.g., "Juan.DeLaCruz@Mail.com")
+    //       Looked up: Line 28 (User user = repository.findByEmail(email);), line 50 (if (repository.exists(email))), and line 65 (public User getUser(String email) { return repository.findByEmail(email); }),
+    //       where the lookup uses the input string case-sensitively without normalizing letter case
+    //    d) Normalize emails consistently (e.g., email.trim().toLowerCase(Locale.ROOT)) when saving and looking up/checking existence,
+    //       and adding a unit test in AuthManagerTest that registers a mixed-case email and verifies login and duplicate-registration handling across different casings.
     private void attemptLogin() {
         clearErrors();
 
