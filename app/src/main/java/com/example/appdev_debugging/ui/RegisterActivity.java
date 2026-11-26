@@ -87,6 +87,14 @@ public class RegisterActivity extends AppCompatActivity{
     //    b) Make a truth table for hasLetter / hasDigit (4 rows). For each row, write what the
     //       rule SHOULD return and what the code ACTUALLY returns.
     //    c) Fix the condition. Confirm with the unit tests (one of them should be failing right now).
+    //  Answers:
+    //    a) Located in Validator.validateNewPassword(String password) (Validator.java, checking MIN_PASSWORD_LENGTH, hasLetter, and hasDigit).
+    //    b) hasLetter   hasDigit    SHOULD Return                                  ACTUALLY Returns
+    //       true        true        null(valid)                                    null(valid)
+    //       true        false       "Password must contain letters and numbers"    null (invalid — wrongly accepted)
+    //       false       true        "Password must contain letters and numbers"    null (invalid — wrongly accepted)
+    //       false       false       "Password must contain letters and numbers"    "Password must contain letters and numbers"
+    //    c) Line 36. if (!hasLetter || !hasDigit) return "Password must contain letters and numbers";
     private void attemptRegister() {
         clearErrors();
 

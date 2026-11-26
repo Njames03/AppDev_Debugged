@@ -35,7 +35,7 @@ public class Validator {
             if (Character.isLetter(c)) hasLetter = true;
             if (Character.isDigit(c)) hasDigit = true;
         }
-        if (!hasLetter && !hasDigit) return "Password must contain letters and numbers";
+        if (!hasLetter || !hasDigit) return "Password must contain letters and numbers";
         return null;
     }
 

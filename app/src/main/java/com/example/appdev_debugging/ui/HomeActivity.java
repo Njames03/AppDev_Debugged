@@ -53,6 +53,14 @@ public class HomeActivity extends AppCompatActivity{
         //       before login, after login, and after logout. What do you see?
         //    c) Find and fix the root cause. Do NOT fix it by adding extra code here in HomeActivity;
         //       fix the class that is actually responsible for the session.
+        //  Answers:
+        //    a -  The bug only appears when "Remember me" was ticked because the session is also persisted to disk in SharedPreferences.
+        //         Logging out clears the in-memory session but fails to clear the saved session on disk so when the app process is killed, it reloads the leftover session logging me back in.
+        //    b -  Before login: No session XML file exists yet (or the file has no logged-in user email / rememberMe entry).
+        //         After login (with "Remember me"): An XML file appears containing the saved user session keys/values (e.g., the user's email / logged-in flag).
+        //         After logout: The saved user session entries are still present in the XML file instead of being removed/cleared (often because editor.clear() / editor.remove(...) was never called or .apply() / .commit() was missing).
+        //    c - Find and fix the root cause. Do NOT fix it by adding extra code here in HomeActivity;
+        //       fix the class that is actually responsible for the session.
         btnLogout.setOnClickListener(v -> {
             sessionManager.logout();
             goToLogin();
